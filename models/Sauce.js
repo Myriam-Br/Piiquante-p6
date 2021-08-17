@@ -1,6 +1,7 @@
 //importer mongoose
 const mongoose = require('mongoose');
 
+
 const sauceSchema = mongoose.Schema({
     userId : {type: String, require: true},
     name : {type: String, require: true},
@@ -9,6 +10,10 @@ const sauceSchema = mongoose.Schema({
     imageUrl : {type: String, require: true},
     mainPepper : {type: String, require: true},
     heat : {type: Number, require: true},
+    likes:{type:Number, require: true, default:0},
+    dislikes:{type:Number, require: true, default:0},
+    usersLiked :{type: [String]},
+    usersDisliked :{type: [String]}
 })
 
 module.exports = mongoose.model('Sauce', sauceSchema);
