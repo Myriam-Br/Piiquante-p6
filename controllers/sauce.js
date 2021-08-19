@@ -1,6 +1,7 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 const mongooseUniqueValidator = require('mongoose-unique-validator');
+const { find } = require('../models/Sauce');
 
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -8,8 +9,11 @@ exports.createSauce = (req, res, next) => {
 
   const sauce = new Sauce({
    ...sauceObject,
-   imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+   imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+   userLiked : [],
+   userDisLiked : [],
   });
+
   sauce.save()
     .then(() => {res.status(201).json(
       {
@@ -44,23 +48,66 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.likeSauce = (req, res, next) => {
-Sauce.findOne({_id: req.body.id})
-.then(likes => {
+Sauce.findOne({_id: req.params.id})
+.then(sauce => {
+    const like = req.body.like; 
+    const userId = req.body.userId;
+
+    console.log(req.body.like);
+    console.log(req.body.userId);
+    
+    console.log(sauce.usersLiked);
+    console.log(sauce.usersDisliked);
+    
+    console.log(like);
+
+    console.log('utilisateur',sauce.userId == userId);
+
+    if(sauce.userId === userId && !(sauce.likes === like)){
+     console.log('utilisateur existe dans le tableau');
+     
+ 
+      if(like == 1){    
+        sauce.usersLiked.push(like);
+        sauce.usersDisliked.splice(like);
+        sauce.likes = 1;  
+        sauce.dislikes = 0;    
+        console.log('liked');      
+      }    
+  
+      if(like == -1){
+      console.log('disliked');
+      sauce.usersDisliked.push(like);
+      console.log(sauce.usersLiked);
+      sauce.usersLiked.splice(like);
+      sauce.dislikes = 1;
+      sauce.likes = 0;    
+      }
+  
+      if(like == 0){
+        console.log('avis annulé');
+        sauce.usersLiked.splice(like);
+        sauce.usersDisliked.splice(like);
+        sauce.likes = 0;    
+        sauce.dislikes = 0;    
+      } 
+
+    }
 
  
-  if(!likes){
-    const like = req.body.likes; 
-    like.save()
+
+    
+    sauce.save()
     .then(() => { res.status(201).json({message: 'Like saved successfully!'});
     })
     .catch((error) => {res.status(400).json({ error: error});
     });
 
-  } 
- 
-}
+})
 
-)}
+.catch((error) => {res.status(404).json({ error: error});});
+
+}
 
 /*
 exports.modifySauceLike = async (req, res, next) => {
