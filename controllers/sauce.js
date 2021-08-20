@@ -49,6 +49,7 @@ exports.modifySauce = (req, res, next) => {
 
 exports.likeSauce = (req, res, next) => {
 Sauce.findOne({_id: req.params.id})
+
 .then(sauce => {
     const like = req.body.like; 
     const userId = req.body.userId;
@@ -59,44 +60,55 @@ Sauce.findOne({_id: req.params.id})
     console.log(sauce.usersLiked);
     console.log(sauce.usersDisliked);
     
-    console.log(like);
 
-    console.log('utilisateur',sauce.userId == userId);
+    console.log('utilisateur',userId);
 
-    if(sauce.userId === userId && !(sauce.likes === like)){
-     console.log('utilisateur existe dans le tableau');
-     
- 
-      if(like == 1){    
-        sauce.usersLiked.push(like);
-        sauce.usersDisliked.splice(like);
-        sauce.likes = 1;  
-        sauce.dislikes = 0;    
-        console.log('liked');      
-      }    
-  
-      if(like == -1){
-      console.log('disliked');
-      sauce.usersDisliked.push(like);
-      console.log(sauce.usersLiked);
-      sauce.usersLiked.splice(like);
-      sauce.dislikes = 1;
-      sauce.likes = 0;    
-      }
-  
-      if(like == 0){
-        console.log('avis annulé');
-        sauce.usersLiked.splice(like);
-        sauce.usersDisliked.splice(like);
-        sauce.likes = 0;    
-        sauce.dislikes = 0;    
-      } 
-
-    }
-
- 
+    var findUserByLike = sauce.usersDisliked.findIndex(x => sauce.usersLiked[x] === userId);
+    var findUserByDislike =sauce.usersDisliked.findIndex(x => sauce.usersDisliked[x] === userId); 
 
     
+   
+    if(userId && like === 1){
+      sauce.usersLiked.push(userId);
+      sauce.likes = sauce.likes + 1;   
+    }
+    else if(findUserByLike && like === 1){
+      console.log('avis déja  donné');
+    }
+    else if(findUserByLike && like === 0){
+      console.log('avis annulé');
+      sauce.usersLiked.splice(userId); 
+    }
+     else{
+      console.log('donnez votre avis');
+    }
+
+
+    if(userId && like === -1){
+      sauce.usersDisliked.push(userId);
+      sauce.dislikes = sauce.dislikes + 1;   
+    }
+
+    else if(findUserByDislike && like === -1){
+      console.log('avis déja  donné');
+    }
+    else if(findUserByDislike && like === 0){
+      console.log('avis annulé');
+      sauce.usersDisliked.splice(userId);   
+    }
+    else{
+      console.log('donnez votre avis');
+    }
+
+   
+   
+    console.log('LikeTab', sauce.usersLiked);
+    console.log('DislikeTab', sauce.usersDisliked);
+    console.log('find userdislike by index', sauce.usersDisliked[1]);
+    console.log('find userlike by index', sauce.usersLiked[1]);
+   
+
+
     sauce.save()
     .then(() => { res.status(201).json({message: 'Like saved successfully!'});
     })
