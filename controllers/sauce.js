@@ -51,11 +51,14 @@ exports.likeSauce = (req, res, next) => {
 Sauce.findOne({_id: req.params.id})
 
 .then(sauce => {
-    const like = req.body.like; 
-    const userId = req.body.userId;
+    
+ 
+console.log('test/////////');
+    if(req.body.userId!=undefined && req.body.like!=undefined){
 
-    console.log(req.body.like);
-    console.log(req.body.userId);
+    const like = parseInt(req.body.like); 
+    const userId = req.body.userId;
+    
     
     console.log(sauce.usersLiked);
     console.log(sauce.usersDisliked);
@@ -63,57 +66,62 @@ Sauce.findOne({_id: req.params.id})
 
     console.log('utilisateur',userId);
 
-    var findUserByLike = sauce.usersDisliked.findIndex(x => sauce.usersLiked[x] === userId);
+    var findUserByLike = sauce.usersLiked.findIndex(x => sauce.usersLiked[x] === userId);
     var findUserByDislike =sauce.usersDisliked.findIndex(x => sauce.usersDisliked[x] === userId); 
-
+      console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike');
     
    
-    if(userId && like === 1){
-      sauce.usersLiked.push(userId);
-      sauce.likes = sauce.likes + 1;   
-    }
-    else if(findUserByLike && like === 1){
+   
+    if(findUserByLike > -1 && like === 1){
       console.log('avis déja  donné');
     }
-    else if(findUserByLike && like === 0){
+    else if(findUserByLike > -1 && like === 0){
       console.log('avis annulé');
-      sauce.usersLiked.splice(userId); 
+      sauce.usersLiked.splice(userId);    
+    }
+    else if( like === 1){
+      sauce.usersLiked.push(userId); 
     }
      else{
-      console.log('donnez votre avis');
+      console.log('donnez votre avis 1');
     }
 
 
-    if(userId && like === -1){
-      sauce.usersDisliked.push(userId);
-      sauce.dislikes = sauce.dislikes + 1;   
-    }
-
-    else if(findUserByDislike && like === -1){
+    if(findUserByDislike > -1 && like === -1){
       console.log('avis déja  donné');
     }
-    else if(findUserByDislike && like === 0){
+    else if(findUserByDislike > -1 && like === 0){
       console.log('avis annulé');
       sauce.usersDisliked.splice(userId);   
+    } 
+    else if(like === -1){
+      sauce.usersDisliked.push(userId);        
     }
     else{
-      console.log('donnez votre avis');
+      console.log('donnez votre avis 2 ');
     }
 
+    sauce.likes = sauce.usersLiked.length;  
+    sauce.dislikes = sauce.usersDisliked.length;    
    
+   /*
+    console.log('LikeTab', sauce.usersLiked)
+    console.log('DislikeTab', sauce.usersDisliked)
+    console.log('find userdislike by index', sauce.usersDisliked[1])
+    console.log('find userlike by index', sauce.usersLiked[1])
+    */
    
-    console.log('LikeTab', sauce.usersLiked);
-    console.log('DislikeTab', sauce.usersDisliked);
-    console.log('find userdislike by index', sauce.usersDisliked[1]);
-    console.log('find userlike by index', sauce.usersLiked[1]);
-   
-
 
     sauce.save()
     .then(() => { res.status(201).json({message: 'Like saved successfully!'});
     })
     .catch((error) => {res.status(400).json({ error: error});
     });
+  } 
+  else{
+    console.log();
+    res.status(400).json({ error: 'userID et like manquant'})
+  }
 
 })
 
