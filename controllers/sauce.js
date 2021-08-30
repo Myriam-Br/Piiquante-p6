@@ -54,21 +54,22 @@ Sauce.findOne({_id: req.params.id})
     
  
 console.log('test/////////');
-    if(req.body.userId!=undefined && req.body.like!=undefined){
+
+    if(req.body.userId!=undefined && parseInt(req.body.like)!=undefined){
 
     const like = parseInt(req.body.like); 
     const userId = req.body.userId;
     
-    
+    /*
     console.log(sauce.usersLiked);
-    console.log(sauce.usersDisliked);
+    console.log(sauce.usersDisliked);*/
     
 
     console.log('utilisateur',userId);
 
-    var findUserByLike = sauce.usersLiked.findIndex(x => sauce.usersLiked[x] === userId);
-    var findUserByDislike =sauce.usersDisliked.findIndex(x => sauce.usersDisliked[x] === userId); 
-      console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike');
+    var findUserByLike = sauce.usersLiked.findIndex((x) => x == userId)
+    var findUserByDislike = sauce.usersDisliked.findIndex((x) => x == userId)
+      //console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike');
     
    
    
@@ -102,7 +103,8 @@ console.log('test/////////');
     }
 
     sauce.likes = sauce.usersLiked.length;  
-    sauce.dislikes = sauce.usersDisliked.length;    
+    sauce.dislikes = sauce.usersDisliked.length;   
+    console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike'); 
    
    /*
     console.log('LikeTab', sauce.usersLiked)
@@ -129,16 +131,7 @@ console.log('test/////////');
 
 }
 
-/*
-exports.modifySauceLike = async (req, res, next) => {
-  const sauceObject = req.body.sauce;
 
-  Sauce.updateOne({like: req.params.like}, {...sauceObject, like: req.params.like})
-  .then(() => { res.status(201).json({message: 'Sauce like updated successfully!'});
-    })
-    .catch((error) => {res.status(400).json({ error: error});
-    });
-};*/
 
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
