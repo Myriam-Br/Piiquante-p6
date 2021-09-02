@@ -67,47 +67,62 @@ console.log('test/////////');
 
     console.log('utilisateur',userId);
 
-    var findUserByLike = sauce.usersLiked.findIndex((x) => x == userId)
-    var findUserByDislike = sauce.usersDisliked.findIndex((x) => x == userId)
-      //console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike');
+
+    var findUserByLike = sauce.usersLiked.findIndex((x) => x == userId);
+    var findUserByDislike = sauce.usersDisliked.findIndex((x) => x == userId);
+
+
+          if(findUserByLike > -1 && like == 0){
+            console.log('avis annulé');
+            sauce.usersLiked.splice(findUserByLike);    
+          }else if(like === 1){  
+            sauce.usersLiked.push(userId); 
+          }
+        
+          if(findUserByDislike > -1 && like == 0){
+            console.log('avis annulé');
+            sauce.usersDisliked.splice(findUserByDislike);   
+          }  
+          else if( like === -1){
+            sauce.usersDisliked.push(userId);        
+          }
     
-   
-   
-    if(findUserByLike > -1 && like === 1){
-      console.log('avis déja  donné');
-      console.log('avis déja  donné');
-    }
+     
+      
 
-    
-    else if(findUserByLike > -1 && like === 0){
-      console.log('avis annulé');
-      sauce.usersLiked.splice(userId);    
-    }
-    else if( like === 1){  
-      sauce.usersLiked.push(userId); 
-    }
-     else{
-      console.log('donnez votre avis 1');
-    }
+/*
+let test1 = sauce.usersLiked.findIndex((x) => x == userId);  
+let test2 = sauce.usersDisliked.findIndex((x) => x == userId);  
+if (like==0){
+  //sauce.usersLiked.splice(userId);
+  //sauce.usersDisliked.splice(userId);
+  console.log('donnez votre avis');
+}
 
+else if (like==1){
+  if(test2 > -1){
+    sauce.usersDisliked.splice(test2, 1);
+  }
+ if (test1 == -1){
+  sauce.usersLiked.push(userId);
+ }
 
-    if(findUserByDislike > -1 && like === -1){
-      console.log('avis déja  donné');
-    }
-    else if(findUserByDislike > -1 && like === 0){
-      console.log('avis annulé');
-      sauce.usersDisliked.splice(userId);   
-    } 
-    else if(like === -1){
-      sauce.usersDisliked.push(userId);        
-    }
-    else{
-      console.log('donnez votre avis 2 ');
-    }
+  
+}
 
+else if (like==-1) {
+  if(test1 > -1){
+    sauce.usersLiked.splice(test1, 1);
+  }
+
+  if(test2 == -1) {
+    sauce.usersDisliked.push(userId);
+  }  
+}
+*/
     sauce.likes = sauce.usersLiked.length;  
     sauce.dislikes = sauce.usersDisliked.length;   
-    console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike'); 
+    //console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike'); 
    
    /*
     console.log('LikeTab', sauce.usersLiked)
@@ -116,7 +131,6 @@ console.log('test/////////');
     console.log('find userlike by index', sauce.usersLiked[1])
     */
    
-
     sauce.save()
     .then(() => { res.status(201).json({message: 'Like saved successfully!'});
     })
