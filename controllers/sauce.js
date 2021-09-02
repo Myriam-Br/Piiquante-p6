@@ -75,12 +75,15 @@ console.log('test/////////');
    
     if(findUserByLike > -1 && like === 1){
       console.log('avis déja  donné');
+      console.log('avis déja  donné');
     }
+
+    
     else if(findUserByLike > -1 && like === 0){
       console.log('avis annulé');
       sauce.usersLiked.splice(userId);    
     }
-    else if( like === 1){
+    else if( like === 1){  
       sauce.usersLiked.push(userId); 
     }
      else{
