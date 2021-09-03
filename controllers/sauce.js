@@ -77,15 +77,15 @@ console.log('test/////////');
             sauce.usersLiked.splice(findUserByLike, 1);    
           }else if(like === 1){  
             sauce.usersLiked.push(userId); 
-          }
-        
-          if(findUserByDislike > -1 && like == 0){
+          }else if(findUserByDislike > -1 && like == 0){
             console.log('avis annulé');
             sauce.usersDisliked.splice(findUserByDislike, 1);   
-          }  
-          else if( like === -1){
+          } else if( like === -1){
             sauce.usersDisliked.push(userId);        
           }
+        
+          
+         
     
      
       
