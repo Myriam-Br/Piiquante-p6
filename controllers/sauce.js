@@ -1,7 +1,5 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
-const mongooseUniqueValidator = require('mongoose-unique-validator');
-const { find } = require('../models/Sauce');
 
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -59,10 +57,7 @@ console.log('test/////////');
 
     const like = parseInt(req.body.like); 
     const userId = req.body.userId;
-    
-    /*
-    console.log(sauce.usersLiked);
-    console.log(sauce.usersDisliked);*/
+  
     
 
     console.log('utilisateur',userId);
@@ -85,51 +80,10 @@ console.log('test/////////');
           }
         
           
-         
-    
-     
-      
-
-/*
-let test1 = sauce.usersLiked.findIndex((x) => x == userId);  
-let test2 = sauce.usersDisliked.findIndex((x) => x == userId);  
-if (like==0){
-  //sauce.usersLiked.splice(userId);
-  //sauce.usersDisliked.splice(userId);
-  console.log('donnez votre avis');
-}
-
-else if (like==1){
-  if(test2 > -1){
-    sauce.usersDisliked.splice(test2, 1);
-  }
- if (test1 == -1){
-  sauce.usersLiked.push(userId);
- }
-
-  
-}
-
-else if (like==-1) {
-  if(test1 > -1){
-    sauce.usersLiked.splice(test1, 1);
-  }
-
-  if(test2 == -1) {
-    sauce.usersDisliked.push(userId);
-  }  
-}
-*/
     sauce.likes = sauce.usersLiked.length;  
     sauce.dislikes = sauce.usersDisliked.length;   
     //console.log(findUserByLike,'findUserByLike', findUserByDislike,'findUserByDislike'); 
-   
-   /*
-    console.log('LikeTab', sauce.usersLiked)
-    console.log('DislikeTab', sauce.usersDisliked)
-    console.log('find userdislike by index', sauce.usersDisliked[1])
-    console.log('find userlike by index', sauce.usersLiked[1])
-    */
+
    
     sauce.save()
     .then(() => { res.status(201).json({message: 'Like saved successfully!'});
@@ -147,7 +101,6 @@ else if (like==-1) {
 .catch((error) => {res.status(404).json({ error: error});});
 
 }
-
 
 
 exports.deleteSauce = (req, res, next) => {
