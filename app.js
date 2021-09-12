@@ -1,16 +1,23 @@
 //importer express, bodyparser, mongoose, thing (modèle mongoose)
-
+const bodyParser= require('body-parser')
 const express = require('express');
+const helmet = require("helmet");
 const mongoose = require('mongoose');
-
+const path = require('path');
+const app = express();
 //importer les routes
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
-const path = require('path');
 
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-const app = express();
+app.use(helmet());
+
 
 mongoose.connect('mongodb+srv://Myriam12:Octhopus.12@cluster0.4isbd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
   { useNewUrlParser: true,
