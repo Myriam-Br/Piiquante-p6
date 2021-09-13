@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
+require('dotenv').config()
 //importer les routes
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
@@ -18,8 +19,8 @@ app.use(
 
 app.use(helmet());
 
-
-mongoose.connect('mongodb+srv://Myriam12:Octhopus.12@cluster0.4isbd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+const connectMongoose = process.env.MONGOOSE;
+mongoose.connect(connectMongoose,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))

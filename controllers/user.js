@@ -1,6 +1,7 @@
 const bcrypt = require ('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+require('dotenv').config()
 
 
 exports.signup = (req, res, next) => {
@@ -41,12 +42,12 @@ exports.login = (req, res, next) => {
                     //si le mot de passe est incorrect
                     return res.status(401).json({ error: 'Mot de passe incorrect !' }); //401 = accès non autorisé
                     }
-
+                    const tokenSecret = process.env.TOKEN;
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            tokenSecret,
                             { expiresIn: '24h' }
                         )
                     });
